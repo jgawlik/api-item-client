@@ -9,7 +9,7 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class Item
+class Item implements ItemInterface
 {
     private $http;
     private const ITEMS_URL = '/v1/items';
@@ -32,7 +32,7 @@ class Item
         return json_decode($response->getBody(), true);
     }
 
-    public function add(array $postParams)
+    public function add(array $postParams): array
     {
         $this->optionsResolverForAddUpdateImte();
         $options = $this->optionsResolver->resolve($postParams);
@@ -47,7 +47,7 @@ class Item
         return json_decode($response->getBody(), true);
     }
 
-    public function update(array $postParams)
+    public function update(array $postParams): array
     {
         $this->optionsResolverForAddUpdateImte();
         $options = $this->optionsResolver->resolve($postParams);
@@ -62,7 +62,7 @@ class Item
         return json_decode($response->getBody(), true);
     }
 
-    public function remove(int $itemId)
+    public function remove(int $itemId): array
     {
         $response = $this->http->request('DELETE', self::ITEMS_URL . '/' . $itemId);
 
@@ -99,12 +99,12 @@ class Item
     private function defineAmountEquals()
     {
         $this->optionsResolver->setDefined('amount_equals');
-        $this->optionsResolver->setAllowedTypes('amountEquals', 'int');
+        $this->optionsResolver->setAllowedTypes('amount_equals', 'int');
     }
 
     private function defineAmountGreater()
     {
         $this->optionsResolver->setDefined('amount_greater');
-        $this->optionsResolver->setAllowedTypes('amountGreater', 'int');
+        $this->optionsResolver->setAllowedTypes('amount_greater', 'int');
     }
 }
