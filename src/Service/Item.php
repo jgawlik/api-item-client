@@ -26,10 +26,17 @@ class Item implements ItemInterface
     {
         $this->optionsResolverForGetByParams();
         $options = $this->optionsResolver->resolve($params);
-        $response = $this->http->request('GET', self::ITEMS_URL, [
-            'query' => $options
-        ]);
-        return json_decode($response->getBody(), true);
+        try {
+            $response = $this->http->request('GET', self::ITEMS_URL, [
+                'query' => $options
+            ]);
+        } catch (ClientException $clientException) {
+            $data = json_decode((string)$clientException->getResponse()->getBody(), true);
+
+            throw new ItemException($data['errors']['message'], $clientException->getCode());
+        }
+
+        return json_decode((string)$response->getBody(), true);
     }
 
     public function add(array $postParams): array
@@ -41,10 +48,11 @@ class Item implements ItemInterface
                 'form_params' => $options,
             ]);
         } catch (ClientException $clientException) {
-            $data = json_decode($clientException->getResponse()->getBody(), true);
-            throw new ItemException($data['error']['message'], $data['error']['code']);
+            $data = json_decode((string)$clientException->getResponse()->getBody(), true);
+            throw new ItemException($data['errors']['message'], $clientException->getCode());
         }
-        return json_decode($response->getBody(), true);
+
+        return json_decode((string)$response->getBody(), true);
     }
 
     public function update(array $postParams): array
@@ -56,17 +64,18 @@ class Item implements ItemInterface
                 'form_params' => $options,
             ]);
         } catch (ClientException $clientException) {
-            $data = json_decode($clientException->getResponse()->getBody(), true);
-            throw new ItemException($data['error']['message'], $data['error']['code']);
+            $data = json_decode((string)$clientException->getResponse()->getBody(), true);
+            throw new ItemException($data['errors']['message'], $clientException->getCode());
         }
-        return json_decode($response->getBody(), true);
+
+        return json_decode((string)$response->getBody(), true);
     }
 
     public function remove(int $itemId): array
     {
         $response = $this->http->request('DELETE', self::ITEMS_URL . '/' . $itemId);
 
-        return json_decode($response->getBody(), true);
+        return json_decode((string)$response->getBody(), true);
     }
 
 
