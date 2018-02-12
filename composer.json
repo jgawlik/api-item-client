@@ -1,0 +1,22 @@
+{
+    "name": "jgawlik/api-client",
+    "type": "library",
+    "authors": [
+        {
+            "name": "jgawlik",
+            "email": "justyna.gawlik@yahoo.pl"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "ApiClient\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ApiClient\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^6.3",
+        "symfony/options-resolver": "^4.0"
+    }
+}
