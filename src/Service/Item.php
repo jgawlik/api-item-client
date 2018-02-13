@@ -57,12 +57,12 @@ class Item implements ItemInterface
         return json_decode((string)$response->getBody(), true);
     }
 
-    public function update(array $postParams): array
+    public function update(array $postParams): void
     {
         $optionsResolver = $this->optionsResolverForAddUpdateImte();
         $options = $optionsResolver->resolve($postParams);
         try {
-            $response = $this->http->request('PATCH', self::ITEMS_URL, [
+            $this->http->request('PATCH', self::ITEMS_URL, [
                 'form_params' => $options,
             ]);
         } catch (ClientException $clientException) {
@@ -70,21 +70,16 @@ class Item implements ItemInterface
         } catch (ServerException $serverException) {
             throw new ItemServerException($serverException->getMessage(), $serverException->getCode(), $serverException);
         }
-
-        return json_decode((string)$response->getBody(), true);
     }
 
-    public function remove(int $itemId): array
+    public function remove(int $itemId): void
     {
         try {
-            $response = $this->http->request('DELETE', self::ITEMS_URL . '/' . $itemId);
+            $this->http->request('DELETE', self::ITEMS_URL . '/' . $itemId);
         } catch (ServerException $serverException) {
             throw new ItemServerException($serverException->getMessage(), $serverException->getCode(), $serverException);
         }
-
-        return json_decode((string)$response->getBody(), true);
     }
-
 
     private function optionsResolverForGetByParams()
     {
