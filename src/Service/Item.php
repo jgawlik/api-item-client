@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ApiClient\Service;
 
-use ApiClient\Exception\ItemException;
+use ApiClient\Exception\ItemClientException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\ClientException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -33,7 +33,7 @@ class Item implements ItemInterface
         } catch (ClientException $clientException) {
             $data = json_decode((string)$clientException->getResponse()->getBody(), true);
 
-            throw new ItemException($data['errors']['message'], $clientException->getCode());
+            throw new ItemClientException($data['errors']['message'], $clientException->getCode());
         }
 
         return json_decode((string)$response->getBody(), true);
@@ -49,7 +49,7 @@ class Item implements ItemInterface
             ]);
         } catch (ClientException $clientException) {
             $data = json_decode((string)$clientException->getResponse()->getBody(), true);
-            throw new ItemException($data['errors']['message'], $clientException->getCode());
+            throw new ItemClientException($data['errors']['message'], $clientException->getCode());
         }
 
         return json_decode((string)$response->getBody(), true);
@@ -65,7 +65,7 @@ class Item implements ItemInterface
             ]);
         } catch (ClientException $clientException) {
             $data = json_decode((string)$clientException->getResponse()->getBody(), true);
-            throw new ItemException($data['errors']['message'], $clientException->getCode());
+            throw new ItemClientException($data['errors']['message'], $clientException->getCode());
         }
 
         return json_decode((string)$response->getBody(), true);
