@@ -49,8 +49,7 @@ class Item implements ItemInterface
                 'form_params' => $options,
             ]);
         } catch (ClientException $clientException) {
-            $data = json_decode((string)$clientException->getResponse()->getBody(), true);
-            throw new ItemClientException($data['errors']['message'], $clientException->getCode());
+            throw new ItemClientException($clientException->getMessage(), $clientException->getCode());
         } catch (ServerException $serverException) {
             throw new ItemServerException($serverException->getMessage(), $serverException->getCode(), $serverException);
         }
@@ -67,8 +66,7 @@ class Item implements ItemInterface
                 'form_params' => $options,
             ]);
         } catch (ClientException $clientException) {
-            $data = json_decode((string)$clientException->getResponse()->getBody(), true);
-            throw new ItemClientException($data['errors']['message'], $clientException->getCode());
+            throw new ItemClientException($clientException->getMessage(), $clientException->getCode());
         } catch (ServerException $serverException) {
             throw new ItemServerException($serverException->getMessage(), $serverException->getCode(), $serverException);
         }
