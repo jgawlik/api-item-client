@@ -16,9 +16,6 @@ class Item implements ItemInterface
     private $http;
     private const ITEMS_URL = '/v1/items';
 
-    /** @var OptionsResolver */
-    private $optionsResolver;
-
     public function __construct(ClientInterface $http)
     {
         $this->http = $http;
@@ -26,8 +23,8 @@ class Item implements ItemInterface
 
     public function getByParams(array $params): array
     {
-        $this->optionsResolverForGetByParams();
-        $options = $this->optionsResolver->resolve($params);
+        $optionsResolver = $this->optionsResolverForGetByParams();
+        $options = $optionsResolver->resolve($params);
         try {
             $response = $this->http->request('GET', self::ITEMS_URL, [
                 'query' => $options
@@ -45,8 +42,8 @@ class Item implements ItemInterface
 
     public function add(array $postParams): array
     {
-        $this->optionsResolverForAddUpdateImte();
-        $options = $this->optionsResolver->resolve($postParams);
+        $optionsResolver = $this->optionsResolverForAddUpdateImte();
+        $options = $optionsResolver->resolve($postParams);
         try {
             $response = $this->http->request('POST', self::ITEMS_URL, [
                 'form_params' => $options,
@@ -63,8 +60,8 @@ class Item implements ItemInterface
 
     public function update(array $postParams): array
     {
-        $this->optionsResolverForAddUpdateImte();
-        $options = $this->optionsResolver->resolve($postParams);
+        $optionsResolver = $this->optionsResolverForAddUpdateImte();
+        $options = $optionsResolver->resolve($postParams);
         try {
             $response = $this->http->request('PATCH', self::ITEMS_URL, [
                 'form_params' => $options,
@@ -93,39 +90,43 @@ class Item implements ItemInterface
 
     private function optionsResolverForGetByParams()
     {
-        $this->optionsResolver = new OptionsResolver();
-        $this->defineAmountEquals();
-        $this->defineAmountGreater();
+        $optionsResolver = new OptionsResolver();
+        $this->defineAmountEquals($optionsResolver);
+        $this->defineAmountGreater($optionsResolver);
+
+        return $optionsResolver;
     }
 
     private function optionsResolverForAddUpdateImte()
     {
-        $this->optionsResolver = new OptionsResolver();
-        $this->defineAmount();
-        $this->defineName();
+        $optionsResolver = new OptionsResolver();
+        $this->defineAmount($optionsResolver);
+        $this->defineName($optionsResolver);
+
+        return $optionsResolver;
     }
 
-    private function defineAmount()
+    private function defineAmount(OptionsResolver $optionsResolver)
     {
-        $this->optionsResolver->setDefined('amount');
-        $this->optionsResolver->setAllowedTypes('amount', 'int');
+        $optionsResolver->setDefined('amount');
+        $optionsResolver->setAllowedTypes('amount', 'int');
     }
 
-    private function defineName()
+    private function defineName(OptionsResolver $optionsResolver)
     {
-        $this->optionsResolver->setDefined('name');
-        $this->optionsResolver->setAllowedTypes('name', 'string');
+        $optionsResolver->setDefined('name');
+        $optionsResolver->setAllowedTypes('name', 'string');
     }
 
-    private function defineAmountEquals()
+    private function defineAmountEquals(OptionsResolver $optionsResolver)
     {
-        $this->optionsResolver->setDefined('amount_equals');
-        $this->optionsResolver->setAllowedTypes('amount_equals', 'int');
+        $optionsResolver->setDefined('amount_equals');
+        $optionsResolver->setAllowedTypes('amount_equals', 'int');
     }
 
-    private function defineAmountGreater()
+    private function defineAmountGreater(OptionsResolver $optionsResolver)
     {
-        $this->optionsResolver->setDefined('amount_greater');
-        $this->optionsResolver->setAllowedTypes('amount_greater', 'int');
+        $optionsResolver->setDefined('amount_greater');
+        $optionsResolver->setAllowedTypes('amount_greater', 'int');
     }
 }
