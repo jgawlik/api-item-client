@@ -12,7 +12,7 @@ interface ItemInterface
 
     public function add(array $postParams): array;
 
-    public function update(array $postParams): void;
+    public function update(array $patchParams, int $itemId): void;
 
     public function remove(int $itemId): void;
 }

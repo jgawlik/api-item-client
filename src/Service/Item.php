@@ -72,12 +72,12 @@ class Item implements ItemInterface
         return json_decode((string)$response->getBody(), true);
     }
 
-    public function update(array $postParams): void
+    public function update(array $patchParams, int $itemId): void
     {
         $optionsResolver = $this->optionsResolverForAddUpdateImte();
-        $options = $optionsResolver->resolve($postParams);
+        $options = $optionsResolver->resolve($patchParams);
         try {
-            $this->http->request('PATCH', self::ITEMS_URL, [
+            $this->http->request('PATCH', self::ITEMS_URL . "/{$itemId}", [
                 'form_params' => $options,
             ]);
         } catch (ClientException $clientException) {
