@@ -21,6 +21,21 @@ class Item implements ItemInterface
         $this->http = $http;
     }
 
+    public function get(int $itemId): array
+    {
+        try {
+            $response = $this->http->request('GET', self::ITEMS_URL . "/{$itemId}");
+        } catch (ClientException $clientException) {
+            $data = json_decode((string)$clientException->getResponse()->getBody(), true);
+
+            throw new ItemClientException($data['errors']['message'], $clientException->getCode());
+        } catch (ServerException $serverException) {
+            throw new ItemServerException($serverException->getMessage(), $serverException->getCode(), $serverException);
+        }
+
+        return json_decode((string)$response->getBody(), true);
+    }
+
     public function getByParams(array $params): array
     {
         $optionsResolver = $this->optionsResolverForGetByParams();
