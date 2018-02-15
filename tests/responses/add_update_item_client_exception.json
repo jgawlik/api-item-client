@@ -1,0 +1,9 @@
+{
+  "errors": {
+    "validation": {
+      "name": [
+        "Podaj nazwę produktu"
+      ]
+    }
+  }
+}
